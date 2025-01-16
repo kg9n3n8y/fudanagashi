@@ -1,18 +1,14 @@
+html {
+  touch-action: manipulation;
+}
+
 body {
   background-color : #E1DAC3;
   font-size        : 20px;
   display          : flex;
   flex-direction   : column;
   align-items      : center;
-  justify-content  : center;
-  height           : auto;
-  margin-top       : 15px;
-  font-family      : "Helvetica Neue", "Helvetica", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Arial", "Yu Gothic", "Meiryo", sans-serif;
-}
-
-#timer {
-  font-size: 40px;
-  margin-bottom: 20px;
+  font-family      : "Hiragino Maru Gothic ProN", "Meiryo", sans-serif;
 }
 
 #image-container {
@@ -22,7 +18,6 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin-bottom: 20px;
 }
 
 img {
@@ -33,12 +28,24 @@ img {
 }
 
 .button-container {
-  display: flex;
-  gap: 10px;
+  padding-top      : 10px;
 }
 
 button {
-  padding: 10px 20px;
-  font-size: 1em;
-  cursor: pointer;
+  color            : #FFFFFF;
+  background-color : #336633;
+  border           : none;
+  border-radius    : 0.3rem;
+  font-size        : medium;
+  width            : 280px;
+  padding          : 0.5rem 1rem;
+  font-size        : 24px;
+}
+
+#kimariji {
+  font-size        : 48px;
+  font-weight      : bold;
+  color            : #cc0000;
+  margin           : 0;
+  display          : none;
 }

@@ -1,33 +1,26 @@
 let remainingImages = [...fudalist];
-
-let timerInterval;
 let startTime;
 let isGameStarted = false;
 
 const timerElement = document.getElementById('timer');
 const imageElement = document.getElementById('random-image');
 const reloadButton = document.getElementById('reload-button');
+const kimariji = document.getElementById('kimariji');
 
-// タイマーの開始
-function startTimer() {
-    startTime = Date.now();
-    timerInterval = setInterval(() => {
-        const elapsedTime = Date.now() - startTime;
-        const seconds = Math.floor(elapsedTime / 1000);
-        const minutes = Math.floor(seconds / 60);
-        timerElement.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
-    }, 1000);
-}
+// 決まり字の表示
+document.getElementById('kimariji-button').addEventListener('click', function() {    
+    if (window.getComputedStyle(kimariji).display === 'none') {
+        kimariji.style.display = 'flex';
+    }
+});
 
 // タイマーの停止
 function stopTimer() {
-    clearInterval(timerInterval);
     const elapsedTime = Date.now() - startTime;
     const seconds = Math.floor(elapsedTime / 1000);
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     alert(`終わりです。${minutes}分${remainingSeconds}秒でした！`);
-    timerInterval = null;
 }
 
 // ページのリロード
@@ -54,20 +47,25 @@ function displayRandomImage() {
         return;
     }
     const isFlipped = Math.random() < 0.5;
-    imageElement.src = randomImage.file;
-    imageElement.style.transform = isFlipped ? 'rotate(180deg)' : 'rotate(0deg)';
+    imageElement.src = isFlipped ? randomImage.reverse : randomImage.normal;
+    document.getElementById('kimariji').textContent = randomImage.kimariji;
 }
 
 // 画像クリック時のイベント
 imageElement.addEventListener('click', () => {
     if (!isGameStarted) {
         isGameStarted = true;
-        startTimer();
+        startTime = Date.now();
         displayRandomImage();
-    } else if (timerInterval) {
+    } else {
         displayRandomImage();
+    }
+
+    const kimariji = document.getElementById('kimariji');
+    if (window.getComputedStyle(kimariji).display === 'flex') {
+        kimariji.style.display = 'none';
     }
 });
 
-// リセットボタンクリックでリロードイベント
+// 最初からボタンクリックでリロードイベント
 reloadButton.addEventListener('click', reloadPage);

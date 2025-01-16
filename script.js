@@ -1,3 +1,7 @@
+window.onload = function(){
+    document.addEventListener("dblclick", function(e){ e.preventDefault();}, { passive: false });
+}
+
 let remainingImages = [...fudalist];
 let startTime;
 let isGameStarted = false;

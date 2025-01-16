@@ -50,3 +50,7 @@ button {
   margin           : 0;
   display          : none;
 }
+
+#preload-image {
+  display          : none;
+}

@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", function() {
     let startTime;
     let isGameStarted = false;
 
-    const timerElement = document.getElementById('timer');
     const imageElement = document.getElementById('random-image');
     const reloadButton = document.getElementById('reload-button');
     const kimariji = document.getElementById('kimariji');

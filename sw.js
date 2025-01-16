@@ -7,7 +7,7 @@ const urlsToCache = [
   './style.css',
   './fudalist.js',
   './script.js',
-  './torifuda',
+  './torifuda/',
   "./torifuda/tori_0.png",
   "./torifuda/tori_1.png",
   "./torifuda/tori_2.png",

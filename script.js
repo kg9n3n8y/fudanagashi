@@ -14,20 +14,28 @@ document.getElementById('kimariji-button').addEventListener('click', function() 
     }
 });
 
-// タイマーの停止
+// タイマーの停止・リセット
 function stopTimer() {
     const elapsedTime = Date.now() - startTime;
     const seconds = Math.floor(elapsedTime / 1000);
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     alert(`終わりです。${minutes}分${remainingSeconds}秒でした！`);
+
+    imageElement.src = './torifuda/tori_0.png';
+    document.getElementById('kimariji').textContent = '';
+    isGameStarted = false;
+    remainingImages = [...fudalist]
 }
 
 // ページのリロード
 function reloadPage(){
     let flag = window.confirm("最初の状態に戻りますが、いいですか？");
     if(flag) {
-        location.reload();
+        imageElement.src = './torifuda/tori_0.png';
+        document.getElementById('kimariji').textContent = '';
+        isGameStarted = false;
+        remainingImages = [...fudalist]
     }
 }
 

@@ -1,0 +1,44 @@
+body {
+  background-color : #E1DAC3;
+  font-size        : 20px;
+  display          : flex;
+  flex-direction   : column;
+  align-items      : center;
+  justify-content  : center;
+  height           : auto;
+  margin-top       : 15px;
+  font-family      : "Helvetica Neue", "Helvetica", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Arial", "Yu Gothic", "Meiryo", sans-serif;
+}
+
+#timer {
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+#image-container {
+  width: 300px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+  transform-origin: center;
+  cursor: pointer;
+}
+
+.button-container {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+}

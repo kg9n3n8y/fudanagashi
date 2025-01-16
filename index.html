@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta property="og:title" content="札流し">
+    <meta property="og:description" content="札流しを練習するためのWebアプリ">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kg9n3n8y.github.io/fudanagashi/">
+    <meta property="og:image" content="https://kg9n3n8y.github.io/fudanagashi/thumbnail.png">
+    <meta property="og:site_name" content="札流し">
+    <meta property="og:locale" content="ja_JP">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="札流し">
+    <meta name="twitter:description" content="札流しを練習するためのWebアプリ">
+    <meta name=”twitter:image” content=”https://kg9n3n8y.github.io/fudanagashi/thumbnail.png” />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>札流し</title>
+    <link rel="manifest" href="manifest.json"/>
+    <link rel="shortcut icon" type="image/png" href="https://kg9n3n8y.github.io/fudanagashi/icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://kg9n3n8y.github.io/fudanagashi/icon.png">
+    <link rel="stylesheet" href="./style.css">
+    <script src="./fudalist.js"></script>
+  </head>
+
+  <body>
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').then(registration => {
+          console.log('ServiceWorker registration successful.');
+        }).catch(err => {
+          console.log('ServiceWorker registration failed.');
+        });
+      }
+    </script>
+
+    <div id="timer">00:00</div>
+    
+    <div id="image-container">
+        <img id="random-image" src="./torifuda/tori_0.png" alt="開始画像">
+    </div>
+
+    <div class="button-container">
+        <button id="reload-button">リセット</button>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+
+</html>

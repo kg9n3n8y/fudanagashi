@@ -1,10 +1,14 @@
 document.addEventListener("DOMContentLoaded", function() {
     document.addEventListener("dblclick", function(e) { e.preventDefault(); }, { passive: false });
 
-    let remainingImages = [...fudalist];
-    let startTime;
-    let isGameStarted = false;
+    // 札を混ぜる
+    let fudaOrder = [...fudalist];
+    fudaOrder = shuffleArray(fudaOrder)
 
+    let startTime;
+    let currentFuda = 0;
+
+    // HTML要素の取得
     const imageElement = document.getElementById('random-image');
     const reloadButton = document.getElementById('reload-button');
     const kimariji = document.getElementById('kimariji');
@@ -17,6 +21,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+    // 配列をシャッフルする
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
     // タイマーの停止・リセット
     function stopTimer() {
         const elapsedTime = Date.now() - startTime;
@@ -25,54 +38,46 @@ document.addEventListener("DOMContentLoaded", function() {
         const remainingSeconds = seconds % 60;
         alert(`終わりです。${minutes}分${remainingSeconds}秒でした！`);
 
-        imageElement.src = './torifuda/tori_0.png';
-        kimariji.textContent = '';
-        isGameStarted = false;
-        remainingImages = [...fudalist];
+        resetPage();
     }
 
-    // ページのリロード
+    // 最初からボタンクリック時のイベント
     function reloadPage(){
         let flag = window.confirm("最初の状態に戻りますが、いいですか？");
         if(flag) {
-            imageElement.src = './torifuda/tori_0.png';
-            document.getElementById('kimariji').textContent = '';
-            isGameStarted = false;
-            remainingImages = [...fudalist]
+            resetPage();
         }
     }
 
-    // ランダムなイメージを選択
-    function getRandomImage() {
-        if (remainingImages.length === 0) return null;
-        const randomIndex = Math.floor(Math.random() * remainingImages.length);
-        const [selectedImage] = remainingImages.splice(randomIndex, 1);
-        return selectedImage;
-    }
+    // 状態のリセット
+    function resetPage(){
+        imageElement.src = './torifuda/tori_0.png';
+        kimariji.textContent = '';
+        currentFuda = 0;
+        fudaOrder = shuffleArray(fudaOrder)
+    }   
 
-    // ランダムな画像を表示
-    function displayRandomImage() {
-        const randomImage = getRandomImage();
-        if (!randomImage) {
-            stopTimer();
-            return;
-        }
+    // 札リストから選ばれた札を表示
+    function displayFuda(order) {
+        const fuda = fudaOrder[order];
         const isFlipped = Math.random() < 0.5;
-        imageElement.src = isFlipped ? randomImage.reverse : randomImage.normal;
-        document.getElementById('kimariji').textContent = randomImage.kimariji;
+        imageElement.src = isFlipped ? fuda.reverse : fuda.normal;
+        document.getElementById('kimariji').textContent = fuda.kimariji;
     }
 
     // 画像クリック時のイベント
     imageElement.addEventListener('click', () => {
-        if (!isGameStarted) {
-            isGameStarted = true;
+        if (currentFuda === 0) {
             startTime = Date.now();
-            displayRandomImage();
+            displayFuda(currentFuda);
+            currentFuda++;
+        } else if (currentFuda === 100) {
+            stopTimer();
         } else {
-            displayRandomImage();
+            displayFuda(currentFuda);
+            currentFuda++;
         }
 
-        const kimariji = document.getElementById('kimariji');
         if (window.getComputedStyle(kimariji).display === 'flex') {
             kimariji.style.display = 'none';
         }

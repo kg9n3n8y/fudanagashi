@@ -53,8 +53,9 @@ document.addEventListener("DOMContentLoaded", function() {
     function resetPage(){
         imageElement.src = './torifuda/tori_0.png';
         kimariji.textContent = '';
+        kimariji.style.display = 'none';
         currentFuda = 0;
-        fudaOrder = shuffleArray(fudaOrder)
+        fudaOrder = shuffleArray(fudaOrder);
     }   
 
     // 札リストから選ばれた札を表示

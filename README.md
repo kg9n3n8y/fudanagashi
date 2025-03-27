@@ -1,5 +1,5 @@
-# fudanagashi_1maifuda
+# fudanagashi
 
-札流し(1枚札)をするWebアプリ
+札流しをするWebアプリ
 
 https://kg9n3n8y.github.io/fudanagashi/

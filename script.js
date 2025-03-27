@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
             startTime = Date.now();
             displayFuda(currentFuda);
             currentFuda++;
-        } else if (currentFuda === 100) {
+        } else if (currentFuda === 7) {
             stopTimer();
         } else {
             displayFuda(currentFuda);

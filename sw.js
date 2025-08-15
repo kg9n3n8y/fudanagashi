@@ -1,5 +1,5 @@
 // Cache name
-const CACHE_NAME = 'fudanagashi-caches';
+const CACHE_NAME = 'fudanagashi-caches-v1.0.1';
 // Cache targets
 const urlsToCache = [
   './',
@@ -7,6 +7,9 @@ const urlsToCache = [
   './style.css',
   './fudalist.js',
   './script.js',
+  './icon.png', // 追加
+  './thumbnail.png', // 追加
+  './manifest.json', // 追加
   './torifuda/',
   "./torifuda/tori_0.png",
   "./torifuda/tori_1.png",

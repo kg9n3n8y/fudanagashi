@@ -14,6 +14,49 @@ document.addEventListener("DOMContentLoaded", function() {
     const kimariji = document.getElementById('kimariji');
     const kimarijiButton = document.getElementById('kimariji-button');
 
+    function preloadFudaImages() {
+        const imagePaths = new Set(['./torifuda/tori_0.png']);
+        fudalist.forEach(({ normal, reverse }) => {
+            imagePaths.add(normal);
+            imagePaths.add(reverse);
+        });
+
+        const sources = Array.from(imagePaths);
+        let index = 0;
+        const CHUNK_SIZE = 8;
+
+        const loadChunk = (deadline) => {
+            let processed = 0;
+            while (index < sources.length && processed < CHUNK_SIZE) {
+                if (deadline && deadline.timeRemaining() <= 0) {
+                    break;
+                }
+                const img = new Image();
+                img.src = sources[index];
+                index++;
+                processed++;
+            }
+
+            if (index < sources.length) {
+                if (window.requestIdleCallback) {
+                    requestIdleCallback(loadChunk);
+                } else {
+                    setTimeout(loadChunk, 16);
+                }
+            }
+        };
+
+        if (sources.length === 0) {
+            return;
+        }
+
+        if (window.requestIdleCallback) {
+            requestIdleCallback(loadChunk);
+        } else {
+            setTimeout(loadChunk, 0);
+        }
+    }
+
     // 決まり字の表示
     kimarijiButton.addEventListener('click', function() {
         if (window.getComputedStyle(kimariji).display === 'none') {
@@ -86,4 +129,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 最初からボタンクリックでリロードイベント
     reloadButton.addEventListener('click', reloadPage);
+
+    // ページ読み込み後にアイドル時間を使って札画像を順次読み込む
+    window.addEventListener('load', preloadFudaImages);
 });

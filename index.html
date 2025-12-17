@@ -34,20 +34,52 @@
         });
       }
     </script>
-    
-    <div id="image-container">
-        <img id="random-image" src="./torifuda/tori_0.png">
-    </div>
 
-    <div id="kimariji"></div>
+    <main id="top-screen" class="view">
+      <h1 class="app-title">札流し</h1>
+      <p id="selection-summary" class="info-text"></p>
+      <div class="button-container">
+        <button id="start-button">札流しを開始</button>
+      </div>
+      <div class="button-container">
+        <button id="open-settings-button" class="secondary">使う札を設定</button>
+      </div>
+      <section class="time-panel">
+        <h2 class="time-panel-title">直近の記録</h2>
+        <ul id="time-history" class="time-history"></ul>
+      </section>
+    </main>
 
-    <div class="button-container">
-      <button id="kimariji-button">決まり字を見る</button>
-    </div>
+    <main id="game-screen" class="view hidden" aria-live="polite">
+      <div id="image-container">
+          <img id="random-image" src="./torifuda/tori_0.png" alt="取り札">
+      </div>
 
-    <div class="button-container">
-        <button id="reload-button">最初から</button>
-    </div>
+      <div id="kimariji" aria-live="assertive"></div>
+
+      <div class="button-container">
+        <button id="kimariji-button">決まり字を見る</button>
+      </div>
+
+      <div class="button-container">
+          <button id="reload-button">トップに戻る</button>
+      </div>
+    </main>
+
+    <div id="modal-overlay" class="modal-overlay hidden"></div>
+    <section id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="settings-title">使う札の設定</h2>
+          <button id="close-settings" class="icon-button" aria-label="設定を閉じる">&times;</button>
+        </div>
+        <div id="settings-list"></div>
+        <div class="modal-footer">
+          <button id="enable-all-button" class="secondary all-on-button">すべてオンにする</button>
+          <button id="disable-all-button" class="secondary danger">すべてオフにする</button>
+        </div>
+      </div>
+    </section>
 
     <script src="script.js"></script>
   </body>

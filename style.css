@@ -115,7 +115,7 @@ h2 {
 }
 
 .info-text {
-  font-size        : 28px;
+  font-size        : 24px;
   margin           : 0;
   color            : #333333;
 }
@@ -312,7 +312,7 @@ button:disabled {
   }
 
   .toggle-button.bundle-button {
-    font-size      : 16px;
+    font-size      : 22px;
     padding        : 8px 6px;
   }
 }

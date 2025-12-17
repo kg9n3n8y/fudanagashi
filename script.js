@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const HISTORY_LIMIT = 3;
 
     const LETTER_GROUPS = [
-        { id: 'one', title: '1枚札', letters: ['む', 'す', 'め', 'ふ', 'さ', 'ほ', 'せ'], mode: 'bundle', description: 'む・す・め・ふ・さ・ほ・せ' },
+        { id: 'one', title: '1枚札', letters: ['む', 'す', 'め', 'ふ', 'さ', 'ほ', 'せ'], mode: 'bundle', description: 'むすめふさほせ' },
         { id: 'two', title: '2枚札', letters: ['う', 'つ', 'し', 'も', 'ゆ'], mode: 'single' },
         { id: 'three', title: '3枚札', letters: ['い', 'ち', 'ひ', 'き'], mode: 'single' },
         { id: 'four', title: '4枚札', letters: ['は', 'や', 'よ', 'か'], mode: 'single' },
@@ -185,7 +185,7 @@ document.addEventListener("DOMContentLoaded", function() {
             section.appendChild(heading);
 
             if (group.mode === 'bundle') {
-                const button = createToggleButton(`1枚札（${group.description}）`, ['bundle-button']);
+                const button = createToggleButton(`${group.description}`, ['bundle-button']);
                 button.dataset.bundle = 'true';
                 button.dataset.letters = group.letters.join(',');
                 section.appendChild(button);

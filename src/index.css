@@ -30,12 +30,14 @@ body {
 
 .practice-card-frame {
   max-height: var(--practice-card-max-h);
-  max-width: min(94vw, 32rem, calc(var(--practice-card-max-h) * 2 / 3));
+  max-width: min(100%, 32rem, calc(var(--practice-card-max-h) * 2 / 3));
+  padding-inline: 0.625rem;
+  box-sizing: border-box;
 }
 
 .practice-card-image {
   max-height: var(--practice-card-max-h);
-  max-width: min(94vw, 32rem, calc(var(--practice-card-max-h) * 2 / 3));
+  max-width: min(100%, 32rem, calc(var(--practice-card-max-h) * 2 / 3));
 }
 
 .settings-slider {

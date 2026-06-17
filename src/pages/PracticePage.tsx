@@ -173,15 +173,15 @@ export function PracticePage() {
       headerCenter={
         <Stopwatch startTime={timerStart} running={currentIndex >= 0 && !isFinished} />
       }
-      mainClassName="px-4 pb-4 pt-1"
+      mainClassName="px-4 pb-3 pt-1"
     >
       <div
         className="flex flex-1 flex-col items-center gap-1 overflow-hidden overscroll-none"
         style={
           {
             '--practice-card-max-h': showCounter
-              ? 'calc(100dvh - 10.25rem)'
-              : 'calc(100dvh - 9rem)',
+              ? 'calc(100dvh - 10.75rem)'
+              : 'calc(100dvh - 9.5rem)',
           } as CSSProperties
         }
       >
@@ -208,7 +208,7 @@ export function PracticePage() {
           />
         </div>
 
-        <div className="flex h-[4.75rem] w-full max-w-sm shrink-0 touch-manipulation items-center justify-center px-2">
+        <div className="flex h-[4.25rem] w-full max-w-sm shrink-0 touch-manipulation items-start justify-center px-2 pt-0">
           {isAuto && !isStarted ? (
             <Button onClick={advance}>開始</Button>
           ) : showKimariji && kimarijiText ? (

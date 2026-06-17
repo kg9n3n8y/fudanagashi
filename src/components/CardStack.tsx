@@ -118,7 +118,7 @@ export function CardStack({
   return (
     <div
       ref={containerRef}
-      className="practice-card-frame relative mx-auto flex h-full w-full max-w-[min(94vw,32rem)] touch-none select-none items-center justify-center"
+      className="practice-card-frame relative mx-auto flex h-full w-full max-w-full touch-none select-none items-center justify-center"
       style={{ touchAction: isSwipe ? 'none' : 'manipulation' }}
     >
       <div className="relative flex h-full max-h-full w-full items-center justify-center">

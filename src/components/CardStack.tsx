@@ -11,7 +11,6 @@ interface CardStackProps {
 }
 
 const SNAP_BACK_MS = 200;
-const SLIDE_OUT_MS = 220;
 const CARD_IMAGE =
   'practice-card-image mx-auto block h-auto w-auto max-h-full max-w-full object-contain';
 
@@ -24,10 +23,11 @@ export function CardStack({
 }: CardStackProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const [animating, setAnimating] = useState(false);
+  const [snapBack, setSnapBack] = useState(false);
   const dragStart = useRef<{ x: number; y: number } | null>(null);
   const pointerId = useRef<number | null>(null);
   const hasDragged = useRef(false);
+  const snapBackTimerRef = useRef<number | null>(null);
 
   const isSwipe = inputMethod === 'swipe';
   const showStack = Boolean(nextSrc && isSwipe);
@@ -40,39 +40,33 @@ export function CardStack({
     return Math.min(rect.width, rect.height) * 0.25;
   }, []);
 
-  const resetOffset = useCallback(() => {
-    setAnimating(true);
-    setOffset({ x: 0, y: 0 });
-    window.setTimeout(() => setAnimating(false), SNAP_BACK_MS);
+  const clearSnapBack = useCallback(() => {
+    if (snapBackTimerRef.current !== null) {
+      window.clearTimeout(snapBackTimerRef.current);
+      snapBackTimerRef.current = null;
+    }
+    setSnapBack(false);
   }, []);
 
-  const slideOut = useCallback(
-    (dx: number, dy: number) => {
-      const el = containerRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-      const nx = dx / dist;
-      const ny = dy / dist;
-      const far = Math.max(rect.width, rect.height) * 1.2;
-
-      setAnimating(true);
-      setOffset({ x: nx * far, y: ny * far });
-      window.setTimeout(() => {
-        setOffset({ x: 0, y: 0 });
-        setAnimating(false);
-        onAdvance();
-      }, SLIDE_OUT_MS);
-    },
-    [onAdvance],
-  );
+  const resetOffset = useCallback(() => {
+    if (snapBackTimerRef.current !== null) {
+      window.clearTimeout(snapBackTimerRef.current);
+    }
+    setSnapBack(true);
+    setOffset({ x: 0, y: 0 });
+    snapBackTimerRef.current = window.setTimeout(() => {
+      setSnapBack(false);
+      snapBackTimerRef.current = null;
+    }, SNAP_BACK_MS);
+  }, []);
 
   const handlePointerDown = (e: React.PointerEvent) => {
-    if (disabled || !isSwipe || animating) return;
+    if (disabled || !isSwipe) return;
+    clearSnapBack();
     dragStart.current = { x: e.clientX, y: e.clientY };
     pointerId.current = e.pointerId;
     hasDragged.current = false;
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    containerRef.current?.setPointerCapture(e.pointerId);
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
@@ -91,7 +85,9 @@ export function CardStack({
     pointerId.current = null;
 
     if (getDragDistance(dx, dy) >= threshold()) {
-      slideOut(dx, dy);
+      clearSnapBack();
+      setOffset({ x: 0, y: 0 });
+      onAdvance();
     } else {
       resetOffset();
     }
@@ -103,19 +99,25 @@ export function CardStack({
   };
 
   const handleClick = () => {
-    if (disabled || animating || hasDragged.current) return;
+    if (disabled || snapBack || hasDragged.current) return;
     onAdvance();
   };
 
-  const transitionStyle = animating
-    ? `transform ${offset.x === 0 && offset.y === 0 ? SNAP_BACK_MS : SLIDE_OUT_MS}ms ease-out`
-    : 'none';
+  const swipeHandlers = isSwipe
+    ? {
+        onPointerDown: handlePointerDown,
+        onPointerMove: handlePointerMove,
+        onPointerUp: handlePointerUp,
+        onPointerCancel: handlePointerUp,
+      }
+    : {};
 
   return (
     <div
       ref={containerRef}
       className="practice-card-frame relative mx-auto flex h-full w-full max-w-full touch-none select-none items-center justify-center"
       style={{ touchAction: isSwipe ? 'none' : 'manipulation' }}
+      {...swipeHandlers}
     >
       <div className="relative flex h-full max-h-full w-full items-center justify-center">
         {showStack && (
@@ -133,15 +135,11 @@ export function CardStack({
           className={`${CARD_IMAGE} ${cardPosition} ${!disabled ? 'cursor-pointer' : ''}`}
           style={{
             transform: `translate(${offset.x}px, ${offset.y}px)`,
-            transition: transitionStyle,
+            transition: snapBack ? `transform ${SNAP_BACK_MS}ms ease-out` : 'none',
             zIndex: 1,
           }}
           draggable={false}
           onClick={handleClick}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
         />
       </div>
     </div>

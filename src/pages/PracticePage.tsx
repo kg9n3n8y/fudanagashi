@@ -119,6 +119,21 @@ export function PracticePage() {
   }, []);
 
   useEffect(() => {
+    const { style: htmlStyle } = document.documentElement;
+    const { style: bodyStyle } = document.body;
+    const prevHtmlOverflow = htmlStyle.overflow;
+    const prevBodyOverflow = bodyStyle.overflow;
+
+    htmlStyle.overflow = 'hidden';
+    bodyStyle.overflow = 'hidden';
+
+    return () => {
+      htmlStyle.overflow = prevHtmlOverflow;
+      bodyStyle.overflow = prevBodyOverflow;
+    };
+  }, []);
+
+  useEffect(() => {
     if (!isAuto || !isStarted || isFinished) {
       clearAutoTimer();
       return;
@@ -154,13 +169,14 @@ export function PracticePage() {
       showBack
       backTo="/"
       backLabel="トップへ"
+      lockViewport
       headerCenter={
         <Stopwatch startTime={timerStart} running={currentIndex >= 0 && !isFinished} />
       }
       mainClassName="px-4 pb-4 pt-1"
     >
       <div
-        className="flex flex-1 flex-col items-center gap-1"
+        className="flex flex-1 flex-col items-center gap-1 overflow-hidden overscroll-none"
         style={
           {
             '--practice-card-max-h': showCounter
@@ -192,7 +208,7 @@ export function PracticePage() {
           />
         </div>
 
-        <div className="flex h-[4.75rem] w-full max-w-sm shrink-0 items-center justify-center px-2">
+        <div className="flex h-[4.75rem] w-full max-w-sm shrink-0 touch-manipulation items-center justify-center px-2">
           {isAuto && !isStarted ? (
             <Button onClick={advance}>開始</Button>
           ) : showKimariji && kimarijiText ? (

@@ -10,6 +10,7 @@ interface LayoutProps {
   leftAction?: ReactNode;
   rightAction?: ReactNode;
   mainClassName?: string;
+  lockViewport?: boolean;
   children: ReactNode;
 }
 
@@ -22,10 +23,15 @@ export function Layout({
   leftAction,
   rightAction,
   mainClassName = 'px-4 py-4',
+  lockViewport = false,
   children,
 }: LayoutProps) {
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-lg flex-col bg-bg text-text">
+    <div
+      className={`mx-auto flex w-full max-w-lg flex-col bg-bg text-text ${
+        lockViewport ? 'h-dvh max-h-dvh overflow-hidden' : 'min-h-dvh'
+      }`}
+    >
       <header className="sticky top-0 z-10 grid grid-cols-[1fr_auto_1fr] items-center border-b border-primary/10 bg-bg/95 px-4 py-3 backdrop-blur-sm">
         <div className="justify-self-start">
           {leftAction}
@@ -47,7 +53,13 @@ export function Layout({
         </div>
         <div className="justify-self-end">{rightAction}</div>
       </header>
-      <main className={`flex min-h-0 flex-1 flex-col ${mainClassName}`}>{children}</main>
+      <main
+        className={`flex min-h-0 flex-1 flex-col ${
+          lockViewport ? 'overflow-hidden overscroll-none' : ''
+        } ${mainClassName}`}
+      >
+        {children}
+      </main>
     </div>
   );
 }

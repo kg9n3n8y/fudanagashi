@@ -12,7 +12,6 @@ interface CardStackProps {
 
 const SNAP_BACK_MS = 200;
 const SLIDE_OUT_MS = 220;
-const CARD_SHADOW = 'drop-shadow-[0_8px_16px_rgba(44,44,44,0.12)]';
 const CARD_IMAGE =
   'practice-card-image mx-auto block h-auto w-auto max-h-full max-w-full object-contain';
 
@@ -26,7 +25,6 @@ export function CardStack({
   const containerRef = useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
   const [animating, setAnimating] = useState(false);
-  const [exiting, setExiting] = useState(false);
   const dragStart = useRef<{ x: number; y: number } | null>(null);
   const pointerId = useRef<number | null>(null);
   const hasDragged = useRef(false);
@@ -58,14 +56,12 @@ export function CardStack({
       const ny = dy / dist;
       const far = Math.max(rect.width, rect.height) * 1.2;
 
-      setExiting(true);
       setAnimating(true);
       setOffset({ x: nx * far, y: ny * far });
       window.setTimeout(() => {
-        onAdvance();
         setOffset({ x: 0, y: 0 });
         setAnimating(false);
-        setExiting(false);
+        onAdvance();
       }, SLIDE_OUT_MS);
     },
     [onAdvance],
@@ -134,13 +130,11 @@ export function CardStack({
           key={currentSrc}
           src={currentSrc}
           alt="取り札"
-          className={`${CARD_IMAGE} ${CARD_SHADOW} ${cardPosition} ${!disabled ? 'cursor-pointer' : ''}`}
+          className={`${CARD_IMAGE} ${cardPosition} ${!disabled ? 'cursor-pointer' : ''}`}
           style={{
             transform: `translate(${offset.x}px, ${offset.y}px)`,
             transition: transitionStyle,
             zIndex: 1,
-            opacity: exiting ? 0 : 1,
-            pointerEvents: exiting ? 'none' : 'auto',
           }}
           draggable={false}
           onClick={handleClick}

@@ -56,6 +56,10 @@ export function getAutoIntervalMs(totalSeconds: number): number {
   return totalSeconds * 10;
 }
 
+export function inputMethodLabel(inputMethod: 'tap' | 'swipe'): string {
+  return inputMethod === 'tap' ? 'タップ' : 'スワイプ';
+}
+
 export function modeLabel(
   mode: 'manual' | 'auto',
   inputMethod: 'tap' | 'swipe',

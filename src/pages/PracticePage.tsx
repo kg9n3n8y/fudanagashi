@@ -162,7 +162,7 @@ export function PracticePage() {
   const kimarijiText =
     isStarted && !isFinished ? session.order[currentIndex]?.kimariji ?? '' : '';
 
-  const showCounter = isAuto && isStarted && !isFinished;
+  const showCardCounter = isStarted && !isFinished;
 
   return (
     <Layout
@@ -173,28 +173,23 @@ export function PracticePage() {
       headerCenter={
         <Stopwatch startTime={timerStart} running={currentIndex >= 0 && !isFinished} />
       }
+      rightAction={
+        showCardCounter ? (
+          <span className="font-mono text-sm font-bold tabular-nums text-primary">
+            {currentIndex + 1} / {TOTAL_FUDA}
+          </span>
+        ) : undefined
+      }
       mainClassName="px-4 pb-3 pt-1"
     >
       <div
         className="flex flex-1 flex-col items-center gap-1 overflow-hidden overscroll-none"
         style={
           {
-            '--practice-card-max-h': showCounter
-              ? 'calc(100dvh - 10.75rem)'
-              : 'calc(100dvh - 9.5rem)',
+            '--practice-card-max-h': 'calc(100dvh - 9.5rem)',
           } as CSSProperties
         }
       >
-        <div
-          className={`flex w-full shrink-0 items-center justify-center ${showCounter ? 'h-5' : 'h-0'}`}
-        >
-          {showCounter && (
-            <p className="text-sm font-medium text-primary">
-              {currentIndex + 1} / {TOTAL_FUDA}
-            </p>
-          )}
-        </div>
-
         <div
           className="flex w-full shrink-0 items-center justify-center"
           style={{ height: 'var(--practice-card-max-h)' }}

@@ -25,8 +25,14 @@ export function SettingsModal({ open, onClose }: SettingsModalProps) {
     ((settings.autoTotalSeconds - AUTO_MIN) / (AUTO_MAX - AUTO_MIN)) * 100;
 
   return (
-    <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/40 p-4 sm:items-center">
-      <div className="max-h-[85dvh] w-full max-w-md overflow-y-auto rounded-2xl bg-surface p-6 shadow-xl">
+    <div
+      className="fixed inset-0 z-40 flex items-end justify-center bg-black/40 p-4 sm:items-center"
+      onClick={onClose}
+    >
+      <div
+        className="max-h-[85dvh] w-full max-w-md overflow-y-auto rounded-2xl bg-surface p-6 shadow-xl"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="mb-6 text-xl font-bold text-primary">設定</h2>
 
         <div className="space-y-8">

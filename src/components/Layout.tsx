@@ -9,6 +9,7 @@ interface LayoutProps {
   headerCenter?: ReactNode;
   leftAction?: ReactNode;
   rightAction?: ReactNode;
+  titleClassName?: string;
   mainClassName?: string;
   lockViewport?: boolean;
   children: ReactNode;
@@ -22,6 +23,7 @@ export function Layout({
   headerCenter,
   leftAction,
   rightAction,
+  titleClassName = 'text-xl',
   mainClassName = 'px-4 py-4',
   lockViewport = false,
   children,
@@ -48,7 +50,7 @@ export function Layout({
         <div className="justify-self-center">
           {headerCenter}
           {!headerCenter && title && (
-            <h1 className="truncate text-xl font-bold text-primary">{title}</h1>
+            <h1 className={`truncate font-bold text-primary ${titleClassName}`}>{title}</h1>
           )}
         </div>
         <div className="justify-self-end">{rightAction}</div>

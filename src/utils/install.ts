@@ -9,41 +9,8 @@ export type InstallPlatform =
   | 'other';
 
 export interface ManualInstallGuide {
-  buttonLabel: string;
-  shareButtonLabel?: string;
-  shareHint?: string;
   steps?: string[];
   description?: string;
-}
-
-export function getAppShareUrl(): string {
-  return `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, '')}`;
-}
-
-export function canUseWebShare(): boolean {
-  return typeof navigator !== 'undefined' && typeof navigator.share === 'function';
-}
-
-export async function shareForInstall(): Promise<'shared' | 'cancelled' | 'unavailable'> {
-  if (!canUseWebShare()) return 'unavailable';
-
-  try {
-    await navigator.share({
-      title: '札流し',
-      text: '札流しを練習するためのWebアプリ',
-      url: getAppShareUrl(),
-    });
-    return 'shared';
-  } catch (error) {
-    if (error instanceof DOMException && error.name === 'AbortError') {
-      return 'cancelled';
-    }
-    return 'unavailable';
-  }
-}
-
-export function supportsShareInstall(platform: InstallPlatform): boolean {
-  return platform === 'ios-safari' && canUseWebShare();
 }
 
 export function detectInstallPlatform(): InstallPlatform {
@@ -81,9 +48,6 @@ export function getManualInstallGuide(platform: InstallPlatform): ManualInstallG
   switch (platform) {
     case 'ios-safari':
       return {
-        buttonLabel: 'Safariでホーム画面に追加',
-        shareButtonLabel: '共有メニューを開く',
-        shareHint: '共有メニューから「ホーム画面に追加」を選び、「追加」をタップしてください。',
         steps: [
           '画面下の共有ボタン（□↑）をタップ',
           '「ホーム画面に追加」を選択',
@@ -92,13 +56,11 @@ export function getManualInstallGuide(platform: InstallPlatform): ManualInstallG
       };
     case 'ios-other':
       return {
-        buttonLabel: 'Safariで開いて追加',
         description:
           'iPhone・iPadではSafariでこのページを開き、共有メニューから「ホーム画面に追加」を選んでください。',
       };
     case 'android-chrome':
       return {
-        buttonLabel: 'Chromeでインストール',
         steps: [
           'ブラウザ右上のメニュー（⋮）をタップ',
           '「アプリをインストール」または「ホーム画面に追加」を選択',
@@ -106,7 +68,6 @@ export function getManualInstallGuide(platform: InstallPlatform): ManualInstallG
       };
     case 'desktop-chrome':
       return {
-        buttonLabel: 'Chromeでインストール',
         steps: [
           'アドレスバー右のインストールアイコンをクリック',
           'またはメニュー（⋮）→「札流しをインストール」',
@@ -114,7 +75,6 @@ export function getManualInstallGuide(platform: InstallPlatform): ManualInstallG
       };
     case 'desktop-edge':
       return {
-        buttonLabel: 'Edgeでインストール',
         steps: [
           'アドレスバー右の「アプリで開く」をクリック',
           'またはメニュー（⋯）→「アプリ」→「このサイトをアプリとしてインストール」',
@@ -122,18 +82,15 @@ export function getManualInstallGuide(platform: InstallPlatform): ManualInstallG
       };
     case 'desktop-safari':
       return {
-        buttonLabel: 'SafariでDockに追加',
         steps: ['メニューバーの「ファイル」→「Dockに追加」'],
       };
     case 'firefox':
       return {
-        buttonLabel: 'Firefoxで追加',
         description:
           'Firefoxではメニュー（≡）→「インストール」から追加できる場合があります。未対応の場合はChromeやEdgeのご利用をおすすめします。',
       };
     default:
       return {
-        buttonLabel: 'ブラウザからインストール',
         description:
           'ブラウザのメニューから「アプリをインストール」または「ホーム画面に追加」を選んでください。',
       };

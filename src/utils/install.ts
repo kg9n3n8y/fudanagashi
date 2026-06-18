@@ -10,8 +10,40 @@ export type InstallPlatform =
 
 export interface ManualInstallGuide {
   buttonLabel: string;
+  shareButtonLabel?: string;
+  shareHint?: string;
   steps?: string[];
   description?: string;
+}
+
+export function getAppShareUrl(): string {
+  return `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, '')}`;
+}
+
+export function canUseWebShare(): boolean {
+  return typeof navigator !== 'undefined' && typeof navigator.share === 'function';
+}
+
+export async function shareForInstall(): Promise<'shared' | 'cancelled' | 'unavailable'> {
+  if (!canUseWebShare()) return 'unavailable';
+
+  try {
+    await navigator.share({
+      title: '札流し',
+      text: '札流しを練習するためのWebアプリ',
+      url: getAppShareUrl(),
+    });
+    return 'shared';
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      return 'cancelled';
+    }
+    return 'unavailable';
+  }
+}
+
+export function supportsShareInstall(platform: InstallPlatform): boolean {
+  return platform === 'ios-safari' && canUseWebShare();
 }
 
 export function detectInstallPlatform(): InstallPlatform {
@@ -50,6 +82,8 @@ export function getManualInstallGuide(platform: InstallPlatform): ManualInstallG
     case 'ios-safari':
       return {
         buttonLabel: 'Safariでホーム画面に追加',
+        shareButtonLabel: '共有メニューを開く',
+        shareHint: '共有メニューから「ホーム画面に追加」を選び、「追加」をタップしてください。',
         steps: [
           '画面下の共有ボタン（□↑）をタップ',
           '「ホーム画面に追加」を選択',

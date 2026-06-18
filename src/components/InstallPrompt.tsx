@@ -3,6 +3,8 @@ import {
   detectInstallPlatform,
   getManualInstallGuide,
   getNativeInstallButtonLabel,
+  shareForInstall,
+  supportsShareInstall,
   type InstallPlatform,
 } from '../utils/install';
 import { dismissInstallPrompt, isInstallPromptDismissed } from '../utils/storage';
@@ -24,7 +26,7 @@ export function InstallPrompt() {
   const [visible, setVisible] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [platform, setPlatform] = useState<InstallPlatform>('other');
-  const [showManualGuide, setShowManualGuide] = useState(true);
+  const [showManualGuide, setShowManualGuide] = useState(false);
 
   useEffect(() => {
     if (isInstallPromptDismissed() || isStandalone()) return;
@@ -56,6 +58,23 @@ export function InstallPrompt() {
 
   const manualGuide = getManualInstallGuide(platform);
   const canNativeInstall = deferredPrompt !== null;
+  const canShareInstall = supportsShareInstall(platform);
+
+  const handleManualInstall = async () => {
+    if (canShareInstall) {
+      const result = await shareForInstall();
+      if (result === 'unavailable') {
+        setShowManualGuide(true);
+      }
+      return;
+    }
+
+    setShowManualGuide((prev) => !prev);
+  };
+
+  const manualButtonLabel = canShareInstall
+    ? (manualGuide.shareButtonLabel ?? manualGuide.buttonLabel)
+    : manualGuide.buttonLabel;
 
   return (
     <div className="fixed inset-0 z-40 flex items-end justify-center bg-black/40 p-4 sm:items-center">
@@ -77,10 +96,11 @@ export function InstallPrompt() {
           </Button>
         ) : (
           <div className="space-y-3">
-            <Button onClick={() => setShowManualGuide((prev) => !prev)}>
-              {manualGuide.buttonLabel}
-            </Button>
-            {showManualGuide && (
+            <Button onClick={handleManualInstall}>{manualButtonLabel}</Button>
+            {canShareInstall && manualGuide.shareHint && (
+              <p className="text-sm leading-relaxed text-text/80">{manualGuide.shareHint}</p>
+            )}
+            {(showManualGuide || !canShareInstall) && (
               <div className="rounded-xl bg-bg px-4 py-3 text-sm text-text/80">
                 {manualGuide.steps ? (
                   <ol className="list-decimal space-y-2 pl-5">
@@ -92,6 +112,15 @@ export function InstallPrompt() {
                   <p>{manualGuide.description}</p>
                 )}
               </div>
+            )}
+            {canShareInstall && !showManualGuide && (
+              <button
+                type="button"
+                onClick={() => setShowManualGuide(true)}
+                className="text-sm text-primary underline-offset-2 hover:underline"
+              >
+                手順を表示
+              </button>
             )}
           </div>
         )}

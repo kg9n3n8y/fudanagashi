@@ -7,6 +7,11 @@ const base = '/fudanagashi/';
 
 export default defineConfig({
   base,
+  build: {
+    rollupOptions: {
+      input: 'index.source.html',
+    },
+  },
   plugins: [
     react(),
     tailwindcss(),

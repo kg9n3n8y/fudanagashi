@@ -13,17 +13,20 @@ on:
       - 'icon.png'
       - 'thumbnail.png'
       - '.nojekyll'
+      - 'index.html'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,14 +36,16 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - name: Sync build output to docs/ and repository root
-        run: |
-          rm -rf docs
-          cp -r dist docs
-          touch docs/.nojekyll
-
-          cp -R dist/. .
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          commit_message: 'Deploy to GitHub Pages [skip ci]'
-          commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

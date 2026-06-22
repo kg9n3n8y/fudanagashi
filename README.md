@@ -11,13 +11,14 @@ npm install
 npm run dev
 ```
 
-## ビルド
+## ビルド・デプロイ
 
 ```bash
 npm run build
 ```
 
-`dist/` を GitHub Pages にデプロイします。
+`main` への push で GitHub Actions がビルドし、GitHub Pages に自動デプロイします。
+初回はリポジトリの Settings → Pages → Build and deployment で **GitHub Actions** を選んでください。
 
 ## オフライン（PWA）
 
@@ -26,9 +27,9 @@ npm run build
 - 一度オンラインで開いてからオフライン利用してください
 - 更新がある場合は起動時のバナーから反映できます
 
-## v2 について
+## 技術スタック
 
-v2 では React + Vite + TypeScript + Tailwind CSS で再構築しています。
+React + Vite + TypeScript + Tailwind CSS で構築しています。
 仕様は [docs/v2-spec.md](./docs/v2-spec.md) を参照してください。
 
 v1 のソースは `legacy/` に保管しています。

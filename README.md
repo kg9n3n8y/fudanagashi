@@ -17,8 +17,11 @@ npm run dev
 npm run build
 ```
 
-`main` への push で GitHub Actions がビルドし、GitHub Pages に自動デプロイします。
-初回はリポジトリの Settings → Pages → Build and deployment で **GitHub Actions** を選んでください。
+`main` への push で GitHub Actions がビルドし、`docs/` に成果物をコミットします。
+
+GitHub Pages の設定（Settings → Pages）:
+- Source: **Deploy from a branch**
+- Branch: **main** / Folder: **/docs**
 
 ## オフライン（PWA）
 

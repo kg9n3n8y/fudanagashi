@@ -17,11 +17,11 @@ npm run dev
 npm run build
 ```
 
-`main` への push で GitHub Actions がビルドし、`docs/` に成果物をコミットします。
+`main` への push で GitHub Actions がビルドし、GitHub Pages 用の成果物を `docs/` とリポジトリ直下に配置します。
 
 GitHub Pages の設定（Settings → Pages）:
 - Source: **Deploy from a branch**
-- Branch: **main** / Folder: **/docs**
+- Branch: **main** / Folder: **/ (root)** または **/docs**
 
 ## オフライン（PWA）
 

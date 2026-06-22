@@ -5,6 +5,14 @@ on:
     branches: [main]
     paths-ignore:
       - 'docs/**'
+      - 'assets/**'
+      - 'torifuda/**'
+      - 'sw.js'
+      - 'workbox-*.js'
+      - 'manifest.webmanifest'
+      - 'icon.png'
+      - 'thumbnail.png'
+      - '.nojekyll'
   workflow_dispatch:
 
 permissions:
@@ -25,11 +33,13 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
-      - name: Sync build output to docs/
+      - name: Sync build output to docs/ and repository root
         run: |
           rm -rf docs
           cp -r dist docs
           touch docs/.nojekyll
+
+          cp -R dist/. .
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'Deploy to GitHub Pages [skip ci]'

@@ -33,6 +33,6 @@ GitHub Pages の設定（Settings → Pages）:
 ## 技術スタック
 
 React + Vite + TypeScript + Tailwind CSS で構築しています。
-仕様は [docs/v2-spec.md](./docs/v2-spec.md) を参照してください。
+仕様は [doc/v2-spec.md](./doc/v2-spec.md) を参照してください。
 
 v1 のソースは `legacy/` に保管しています。

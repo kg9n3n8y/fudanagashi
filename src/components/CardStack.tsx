@@ -1,0 +1,147 @@
+import { useCallback, useRef, useState } from 'react';
+import type { InputMethod } from '../types';
+import { getDragDistance } from '../utils/practice';
+
+interface CardStackProps {
+  currentSrc: string;
+  nextSrc: string | null;
+  inputMethod: InputMethod;
+  onAdvance: () => void;
+  disabled?: boolean;
+}
+
+const SNAP_BACK_MS = 200;
+const CARD_IMAGE =
+  'practice-card-image mx-auto block h-auto w-auto max-h-full max-w-full object-contain';
+
+export function CardStack({
+  currentSrc,
+  nextSrc,
+  inputMethod,
+  onAdvance,
+  disabled = false,
+}: CardStackProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [snapBack, setSnapBack] = useState(false);
+  const dragStart = useRef<{ x: number; y: number } | null>(null);
+  const pointerId = useRef<number | null>(null);
+  const hasDragged = useRef(false);
+  const snapBackTimerRef = useRef<number | null>(null);
+
+  const isSwipe = inputMethod === 'swipe';
+  const showStack = Boolean(nextSrc && isSwipe);
+  const cardPosition = isSwipe ? 'absolute inset-0 m-auto' : '';
+
+  const threshold = useCallback(() => {
+    const el = containerRef.current;
+    if (!el) return 80;
+    const rect = el.getBoundingClientRect();
+    return Math.min(rect.width, rect.height) * 0.25;
+  }, []);
+
+  const clearSnapBack = useCallback(() => {
+    if (snapBackTimerRef.current !== null) {
+      window.clearTimeout(snapBackTimerRef.current);
+      snapBackTimerRef.current = null;
+    }
+    setSnapBack(false);
+  }, []);
+
+  const resetOffset = useCallback(() => {
+    if (snapBackTimerRef.current !== null) {
+      window.clearTimeout(snapBackTimerRef.current);
+    }
+    setSnapBack(true);
+    setOffset({ x: 0, y: 0 });
+    snapBackTimerRef.current = window.setTimeout(() => {
+      setSnapBack(false);
+      snapBackTimerRef.current = null;
+    }, SNAP_BACK_MS);
+  }, []);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (disabled || !isSwipe) return;
+    clearSnapBack();
+    dragStart.current = { x: e.clientX, y: e.clientY };
+    pointerId.current = e.pointerId;
+    hasDragged.current = false;
+    containerRef.current?.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!dragStart.current || pointerId.current !== e.pointerId || !isSwipe) return;
+    const dx = e.clientX - dragStart.current.x;
+    const dy = e.clientY - dragStart.current.y;
+    if (getDragDistance(dx, dy) > 5) hasDragged.current = true;
+    setOffset({ x: dx, y: dy });
+  };
+
+  const finishDrag = (clientX: number, clientY: number) => {
+    if (!dragStart.current) return;
+    const dx = clientX - dragStart.current.x;
+    const dy = clientY - dragStart.current.y;
+    dragStart.current = null;
+    pointerId.current = null;
+
+    if (getDragDistance(dx, dy) >= threshold()) {
+      clearSnapBack();
+      setOffset({ x: 0, y: 0 });
+      onAdvance();
+    } else {
+      resetOffset();
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent) => {
+    if (pointerId.current !== e.pointerId) return;
+    finishDrag(e.clientX, e.clientY);
+  };
+
+  const handleClick = () => {
+    if (disabled || snapBack || hasDragged.current) return;
+    onAdvance();
+  };
+
+  const swipeHandlers = isSwipe
+    ? {
+        onPointerDown: handlePointerDown,
+        onPointerMove: handlePointerMove,
+        onPointerUp: handlePointerUp,
+        onPointerCancel: handlePointerUp,
+      }
+    : {};
+
+  return (
+    <div
+      ref={containerRef}
+      className="practice-card-frame relative mx-auto flex h-full w-full max-w-full touch-none select-none items-center justify-center"
+      style={{ touchAction: isSwipe ? 'none' : 'manipulation' }}
+      {...swipeHandlers}
+    >
+      <div className="relative flex h-full max-h-full w-full items-center justify-center">
+        {showStack && (
+          <img
+            src={nextSrc!}
+            alt=""
+            className={`${CARD_IMAGE} ${cardPosition}`}
+            draggable={false}
+          />
+        )}
+        <img
+          key={currentSrc}
+          src={currentSrc}
+          alt="取り札"
+          className={`${CARD_IMAGE} ${cardPosition} ${!disabled ? 'cursor-pointer' : ''}`}
+          style={{
+            transform: `translate(${offset.x}px, ${offset.y}px)`,
+            transition: snapBack ? `transform ${SNAP_BACK_MS}ms ease-out` : 'none',
+            zIndex: 1,
+          }}
+          draggable={false}
+          onClick={handleClick}
+        />
+      </div>
+    </div>
+  );
+}
